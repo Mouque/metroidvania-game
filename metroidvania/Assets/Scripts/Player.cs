@@ -6,13 +6,18 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D rig;
     public Animator anim;
+    public Transform point;
+    public Transform isGroundedCheck;
+    public LayerMask whatIsGround;
+    public float radius, isGroundedCheckRadius;
     public float speed;
-
     public float jumpForce;
 
-    private bool isGrounded;
-    private bool isJumping;
-    private bool canDoubleJump;
+    [SerializeField]
+    private bool isGrounded, isJumping, canDoubleJump, isAttacking;
+    // private bool isJumping;
+    // private bool canDoubleJump;
+    // private bool isAttacking;
 
     // Start is called before the first frame update
     void Start()
@@ -22,8 +27,19 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Collider2D groundHit = Physics2D.OverlapCircle(isGroundedCheck.position, isGroundedCheckRadius, whatIsGround);
+        if (groundHit)
+        {
+            isGrounded = true;
+
+        }
+        else
+        {
+            isGrounded = false;
+        }
         Jump();
         // Debug.Log(rig.velocity.y);
+        Attack();
     }
 
     // Update is called once per frame
@@ -41,26 +57,38 @@ public class Player : MonoBehaviour
 
         if (moviment > 0)
         {
-            anim.SetInteger("transition", 1); // transiciona para a animação run
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            if (!isAttacking)
+            {
+                anim.SetInteger("transition", 1); // transiciona para a animação run
+                transform.eulerAngles = new Vector3(0, 0, 0);
+            }
         }
         else if (moviment < 0)
         {
-            anim.SetInteger("transition", 1);
-            transform.eulerAngles = new Vector3(0, 180, 0);
+            if (!isAttacking)
+            {
+                anim.SetInteger("transition", 1);
+                transform.eulerAngles = new Vector3(0, 180, 0);
+            }
         }
-        else if (moviment == 0 && !isJumping)
+        else if (moviment == 0 && !isJumping && !isAttacking)
         {
             anim.SetInteger("transition", 0); // transiciona para a animação idle
         }
 
         if (rig.velocity.y > 0f && !isGrounded)
         {
-            anim.SetInteger("transition", 2);
+            if (!isAttacking)
+            {
+                anim.SetInteger("transition", 2);
+            }
         }
         else if (rig.velocity.y < 0f && !isGrounded)
         {
-            anim.SetInteger("transition", 3);
+            if (!isAttacking)
+            {
+                anim.SetInteger("transition", 3);
+            }
         }
     }
 
@@ -68,7 +96,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            if (!isJumping) // checa se o player está no ar, se não estiver, executa o pulo
+            if (!isJumping && isGrounded) // checa se o player está no ar, se não estiver, executa o pulo
             {
                 rig.velocity = new Vector2(rig.velocity.x, jumpForce);
                 isJumping = true;
@@ -78,6 +106,7 @@ public class Player : MonoBehaviour
             {
                 rig.velocity = new Vector2(rig.velocity.x, jumpForce);
                 canDoubleJump = false;
+                isJumping = false;
             }
         }
 
@@ -85,6 +114,35 @@ public class Player : MonoBehaviour
         {
             rig.velocity = new Vector2(rig.velocity.x, rig.velocity.y * 0.5f);
         }
+    }
+
+    void Attack()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            isAttacking = true;
+            anim.SetInteger("transition", 4);
+            Collider2D hit = Physics2D.OverlapCircle(point.position, radius);
+
+            if (hit != null)
+            {
+                Debug.Log(hit.name);
+            }
+            StartCoroutine(OnAttack());
+        }
+
+    }
+
+    IEnumerator OnAttack()
+    {
+        yield return new WaitForSeconds(0.333f);
+        isAttacking = false;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(point.position, radius);
+        Gizmos.DrawWireSphere(isGroundedCheck.position, isGroundedCheckRadius);
     }
 
     void OnCollisionEnter2D(Collision2D coll)
