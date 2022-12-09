@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private bool isGrounded, isJumping, canDoubleJump, isAttacking;
+    [SerializeField]
+    private bool canAttack = true;
     // private bool isJumping;
     // private bool canDoubleJump;
     // private bool isAttacking;
@@ -118,8 +120,9 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && canAttack)
         {
+            canAttack = false;
             isAttacking = true;
             anim.SetInteger("transition", 4);
             Collider2D hit = Physics2D.OverlapCircle(point.position, radius);
@@ -137,6 +140,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.333f);
         isAttacking = false;
+        canAttack = true;
     }
 
     void OnDrawGizmos()
