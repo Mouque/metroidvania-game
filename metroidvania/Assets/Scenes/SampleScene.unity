@@ -4512,7 +4512,7 @@ GameObject:
   - component: {fileID: 592418509}
   - component: {fileID: 592418508}
   - component: {fileID: 592418507}
-  - component: {fileID: 592418506}
+  - component: {fileID: 592418511}
   m_Layer: 0
   m_Name: Enemy_Goblin
   m_TagString: Untagged
@@ -4520,21 +4520,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &592418506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 592418505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e892b5f4670a2fe41aaf9425c513664c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0
-  maxVision: 3
-  point: {fileID: 876066305}
 --- !u!50 &592418507
 Rigidbody2D:
   serializedVersion: 4
@@ -4650,6 +4635,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &592418511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592418505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e892b5f4670a2fe41aaf9425c513664c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  maxVision: 3
+  point: {fileID: 876066305}
+  isRight: 1
+  stopDistance: 2
 --- !u!1 &629789903
 GameObject:
   m_ObjectHideFlags: 0
