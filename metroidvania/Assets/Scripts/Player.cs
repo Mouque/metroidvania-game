@@ -9,7 +9,9 @@ public class Player : MonoBehaviour
     public Transform point;
     public Transform isGroundedCheck;
     public LayerMask whatIsGround;
+    public LayerMask enemyLayer;
     public float radius, isGroundedCheckRadius;
+    public int health;
     public float speed;
     public float jumpForce;
 
@@ -17,9 +19,6 @@ public class Player : MonoBehaviour
     private bool isGrounded, isJumping, canDoubleJump, isAttacking;
     [SerializeField]
     private bool canAttack = true;
-    // private bool isJumping;
-    // private bool canDoubleJump;
-    // private bool isAttacking;
 
     // Start is called before the first frame update
     void Start()
@@ -125,11 +124,11 @@ public class Player : MonoBehaviour
             canAttack = false;
             isAttacking = true;
             anim.SetInteger("transition", 4);
-            Collider2D hit = Physics2D.OverlapCircle(point.position, radius);
+            Collider2D hit = Physics2D.OverlapCircle(point.position, radius, enemyLayer);
 
             if (hit != null)
             {
-                Debug.Log(hit.name);
+                hit.GetComponent<Slime>().OnHit();
             }
             StartCoroutine(OnAttack());
         }
@@ -143,7 +142,20 @@ public class Player : MonoBehaviour
         canAttack = true;
     }
 
-    void OnDrawGizmos()
+    void OnHit()
+    {
+        anim.SetTrigger("hit");
+        health--;
+
+        if (health <= 0)
+        {
+            anim.SetTrigger("death");
+            speed = 0f;
+            // game over aqui
+        }
+    }
+
+    void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(point.position, radius);
         Gizmos.DrawWireSphere(isGroundedCheck.position, isGroundedCheckRadius);
@@ -163,6 +175,14 @@ public class Player : MonoBehaviour
         if (coll.gameObject.layer == 3)
         {
             isGrounded = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        if (coll.gameObject.layer == 6)
+        {
+            OnHit();
         }
     }
 }
