@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private bool isGrounded, isJumping, canDoubleJump, isAttacking;
     [SerializeField]
     private bool canAttack = true;
+    public bool dead;
 
     // Start is called before the first frame update
     void Start()
@@ -128,7 +129,17 @@ public class Player : MonoBehaviour
 
             if (hit != null)
             {
-                hit.GetComponent<Slime>().OnHit();
+
+                if (hit.GetComponent<Slime>())
+                {
+                    hit.GetComponent<Slime>().OnHit();
+                }
+
+                if (hit.GetComponent<Goblin>())
+                {
+                    hit.GetComponent<Goblin>().OnHit();
+
+                }
             }
             StartCoroutine(OnAttack());
         }
@@ -142,13 +153,23 @@ public class Player : MonoBehaviour
         canAttack = true;
     }
 
-    void OnHit()
+    float recoveryCount;
+    public void OnHit()
     {
-        anim.SetTrigger("hit");
-        health--;
+        recoveryCount += Time.deltaTime;
 
-        if (health <= 0)
+        if (recoveryCount >= 2f)
         {
+            anim.SetTrigger("hit");
+            health--;
+
+            recoveryCount = 0f;
+        }
+
+
+        if (health <= 0 && !dead)
+        {
+            dead = true;
             anim.SetTrigger("death");
             speed = 0f;
             // game over aqui
