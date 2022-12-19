@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public int health;
     public float speed;
     public float jumpForce;
+    public float recoveryCount = 1.5f;
 
     [SerializeField]
     private bool isGrounded, isJumping, canDoubleJump, isAttacking;
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
         Jump();
         // Debug.Log(rig.velocity.y);
         Attack();
+        recoveryCount += Time.deltaTime;
     }
 
     // Update is called once per frame
@@ -153,12 +155,12 @@ public class Player : MonoBehaviour
         canAttack = true;
     }
 
-    float recoveryCount;
+
     public void OnHit()
     {
-        recoveryCount += Time.deltaTime;
 
-        if (recoveryCount >= 2f)
+
+        if (recoveryCount >= 1.5f)
         {
             anim.SetTrigger("hit");
             health--;
@@ -201,7 +203,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.layer == 6)
+        if (coll.gameObject.tag == "Enemy")
         {
             OnHit();
         }

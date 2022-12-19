@@ -81,10 +81,10 @@ public class Goblin : MonoBehaviour
                     isFront = false;
                     rig.velocity = Vector2.zero;
                     anim.SetInteger("transition", 2);
-                    if (!hit.transform.GetComponent<Player>().dead)
-                    {
-                        hit.transform.GetComponent<Player>().OnHit();
-                    }
+                    // if (!hit.transform.GetComponent<Player>().dead)
+                    // {
+                    //     hit.transform.GetComponent<Player>().OnHit();
+                    // }
 
                 }
             }

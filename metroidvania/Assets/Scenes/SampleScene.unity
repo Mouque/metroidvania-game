@@ -4745,6 +4745,7 @@ MonoBehaviour:
   health: 10
   speed: 5
   jumpForce: 10
+  recoveryCount: 1.5
   isGrounded: 0
   isJumping: 0
   canDoubleJump: 0
